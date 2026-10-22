@@ -162,8 +162,12 @@ case .failure(let failure):
   - dropping the `missingArgument` replay key;
   - dropping the `unknownEnumCase` replay key;
   - auditing only shims that arrive with a format change.
-- **The SwiftUI target has never been compiled.** `IntentContractsUI` is wrapped in `#if canImport(SwiftUI)`, so the Linux build compiles it as an empty module, and no Mac was available to this run. The macOS CI job is the first thing that will compile it.
-- **CI:** not run yet at the time of writing. The workflow defines two jobs. The Linux job (Swift 6.0 container) builds and tests with warnings as errors. The macOS 15 job runs `swift test` and builds both products, including the SwiftUI target, for `generic/platform=iOS Simulator`.
+- **The SwiftUI target is compiled only in CI.** `IntentContractsUI` is wrapped in `#if canImport(SwiftUI)`, so the Linux build compiles it as an empty module. The only place it has been compiled is the macOS CI job above. It has not been run.
+- **CI ([Actions](https://github.com/rajatslakhina/app-intent-contract-kit/actions)):** both jobs passed on the first push of the code (commit `926b9a5`):
+  - **Linux** (`swift:6.0` container): `swift build` and `swift test` with warnings as errors.
+  - **macOS 15:** `swift test` with warnings as errors, then `xcodebuild build` of both products (including `IntentContractsUI`) for `generic/platform=iOS Simulator`.
+
+  Both jobs run the golden-fingerprint test, so the fingerprint held on both platforms.
 - **Simulator:** see the demo repo for exactly what was and wasn't run.
 
 ## License
